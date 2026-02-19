@@ -1,0 +1,33 @@
+{
+    "name": "@pulsetic/n8n-nodes-pulsetic",
+    "version": "1.0.4",
+    "description": "Pulsetic API integration for n8n",
+    "keywords": [
+        "n8n-community-node-package"
+    ],
+    "main": "Pulsetic.node.js",
+    "author": {
+    	"name": "Pulsetic",
+    	"email": "info@pulsetic.com",
+    	"url": "https://pulsetic.com/"
+    },
+    "scripts": {
+        "lint": "eslint . --ext .js"
+    },
+    "n8n": {
+        "credentials": [
+            "PulseticApi.credentials.js"
+        ],
+        "nodes": [
+            "Pulsetic.node.js"
+        ]
+    },
+    "devDependencies": {
+        "eslint": "^8.57.1"
+    },
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+    	"url": "https://github.com/designmodo/pulsetic-n8n"
+    }
+}
