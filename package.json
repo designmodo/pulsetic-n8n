@@ -1,6 +1,6 @@
 {
     "name": "@pulsetic/n8n-nodes-pulsetic",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "description": "Pulsetic API integration for n8n",
     "keywords": [
         "n8n-community-node-package"
@@ -21,6 +21,10 @@
         "nodes": [
             "Pulsetic.node.js"
         ]
+    },
+    "engines": {
+        "node": ">=18.10",
+        "npm": ">=8.11.0"
     },
     "devDependencies": {
         "eslint": "^8.57.1"
