@@ -802,7 +802,7 @@ class Pulsetic {
             }
 
             try {
-                const response = await this.helpers.request(requestOptions);
+                const response = await this.helpers.httpRequest(requestOptions);
                 returnData.push({ json: response });
             } catch (error) {
                 if (this.continueOnFail()) {
