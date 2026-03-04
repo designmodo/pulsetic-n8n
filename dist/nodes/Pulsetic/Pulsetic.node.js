@@ -45,7 +45,7 @@ class Pulsetic {
                     noDataExpression: true,
                     displayOptions: { show: { resource: ['monitor'] } },
                     options: [
-                        { name: 'Get', value: 'get', action: 'Get a monitor' },
+                        { name: 'Get', value: 'get', action: 'Get a monitorr' },
                         { name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
                         { name: 'Create', value: 'create', action: 'Create a monitor' },
                         { name: 'Update', value: 'update', action: 'Update a monitor' },
