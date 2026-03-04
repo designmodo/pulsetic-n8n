@@ -1,3 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.PulseticApi = void 0;
 class PulseticApi {
     constructor() {
         this.name = 'pulseticApi';
@@ -14,9 +17,15 @@ class PulseticApi {
                 },
             },
         ];
+        this.authenticate = {
+            type: 'generic',
+            properties: {
+                headers: {
+                    Authorization: '={{$credentials.apiKey}}',
+                },
+            },
+        };
     }
 }
-
-module.exports = {
-    PulseticApi,
-};
+exports.PulseticApi = PulseticApi;
+//# sourceMappingURL=PulseticApi.credentials.js.map

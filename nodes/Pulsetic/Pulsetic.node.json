@@ -1,0 +1,15 @@
+{
+	"node": "n8n-nodes-pulsetic.pulsetic",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Development", "Miscellaneous"],
+	"resources": {
+		"primaryDocumentation": [
+			{
+				"url": "https://pulsetic.com/"
+			}
+		]
+	},
+	"alias": ["uptime", "monitoring", "pulsetic", "status page"]
+}
+

@@ -1,3 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Pulsetic = void 0;
+const n8n_workflow_1 = require("n8n-workflow");
 class Pulsetic {
     constructor() {
         this.description = {
@@ -9,7 +13,7 @@ class Pulsetic {
             defaults: {
                 name: 'Pulsetic',
             },
-	    icon: 'file:pulsetic.svg',
+            icon: 'file:pulsetic.svg',
             inputs: ['main'],
             outputs: ['main'],
             credentials: [
@@ -23,6 +27,7 @@ class Pulsetic {
                     displayName: 'Resource',
                     name: 'resource',
                     type: 'options',
+                    noDataExpression: true,
                     options: [
                         { name: 'Monitor', value: 'monitor' },
                         { name: 'Status Page', value: 'statusPage' },
@@ -37,9 +42,10 @@ class Pulsetic {
                     displayName: 'Operation',
                     name: 'operation',
                     type: 'options',
+                    noDataExpression: true,
                     displayOptions: { show: { resource: ['monitor'] } },
                     options: [
-                        { name: 'Get', value: 'get', action: 'Get a monitor' },
+                        { name: 'Get', value: 'get', action: 'Get a monitorr' },
                         { name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
                         { name: 'Create', value: 'create', action: 'Create a monitor' },
                         { name: 'Update', value: 'update', action: 'Update a monitor' },
@@ -57,6 +63,7 @@ class Pulsetic {
                     displayName: 'Operation',
                     name: 'operation',
                     type: 'options',
+                    noDataExpression: true,
                     displayOptions: { show: { resource: ['statusPage'] } },
                     options: [
                         { name: 'Get Many', value: 'getAll', action: 'Get many status pages' },
@@ -71,6 +78,7 @@ class Pulsetic {
                     displayName: 'Operation',
                     name: 'operation',
                     type: 'options',
+                    noDataExpression: true,
                     displayOptions: { show: { resource: ['statusPageMaintenance'] } },
                     options: [
                         { name: 'Create', value: 'create', action: 'Create maintenance' },
@@ -84,6 +92,7 @@ class Pulsetic {
                     displayName: 'Operation',
                     name: 'operation',
                     type: 'options',
+                    noDataExpression: true,
                     displayOptions: { show: { resource: ['statusPageIncident'] } },
                     options: [
                         { name: 'Get All', value: 'getAll', action: 'Get all incidents for a status page' },
@@ -98,6 +107,7 @@ class Pulsetic {
                     displayName: 'Operation',
                     name: 'operation',
                     type: 'options',
+                    noDataExpression: true,
                     displayOptions: { show: { resource: ['statusPageIncidentUpdate'] } },
                     options: [
                         { name: 'Create', value: 'create', action: 'Create incident update' },
@@ -106,7 +116,6 @@ class Pulsetic {
                     ],
                     default: 'create',
                 },
-
                 // --- IDs ---
                 {
                     displayName: 'Monitor ID',
@@ -212,7 +221,6 @@ class Pulsetic {
                         },
                     },
                 },
-
                 // --- Notification Channel ---
                 {
                     displayName: 'Channel Type',
@@ -253,7 +261,7 @@ class Pulsetic {
                     name: 'smsValue',
                     type: 'boolean',
                     default: false,
-                    description: 'Enable SMS notifications',
+                    description: 'Whether to enable SMS notifications',
                     displayOptions: {
                         show: {
                             resource: ['monitor'],
@@ -267,7 +275,7 @@ class Pulsetic {
                     name: 'callValue',
                     type: 'boolean',
                     default: false,
-                    description: 'Enable Call notifications',
+                    description: 'Whether to enable Call notifications',
                     displayOptions: {
                         show: {
                             resource: ['monitor'],
@@ -276,8 +284,6 @@ class Pulsetic {
                         },
                     },
                 },
-
-
                 // --- Monitor Fields ---
                 {
                     displayName: 'URLs',
@@ -371,7 +377,6 @@ class Pulsetic {
                         },
                     },
                 },
-
                 // --- Status Page Fields ---
                 {
                     displayName: 'Title',
@@ -458,7 +463,6 @@ class Pulsetic {
                     description: 'Comma-separated Monitor IDs',
                     displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
                 },
-
                 // --- Maintenance Fields ---
                 {
                     displayName: 'Name',
@@ -521,7 +525,6 @@ class Pulsetic {
                     placeholder: '12:00 PM',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
-
                 // --- Incident Fields ---
                 {
                     displayName: 'Title',
@@ -559,7 +562,6 @@ class Pulsetic {
                     placeholder: 'YYYY-MM-DD HH:mm',
                     displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create'] } },
                 },
-
                 // --- Incident Update Fields ---
                 {
                     displayName: 'Status',
@@ -593,230 +595,249 @@ class Pulsetic {
             ],
         };
     }
-
     async execute() {
         const items = this.getInputData();
         const returnData = [];
         const credentials = await this.getCredentials('pulseticApi');
         const apiKey = credentials.apiKey;
-
-        const splitComma = (str) => str ? str.split(',').map(s => s.trim()) : [];
-
+        const splitComma = (str) => (str ? str.split(',').map((s) => s.trim()) : []);
         for (let i = 0; i < items.length; i++) {
             const resource = this.getNodeParameter('resource', i);
             const operation = this.getNodeParameter('operation', i);
-
             let method = 'GET';
             let url = '';
             let body = {};
-
             const baseUrl = 'https://api.pulsetic.com/api/public';
-
-            if (resource === 'monitor') {
-                if (operation === 'get') {
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}`;
-                } else if (operation === 'getAll') {
-                    url = `${baseUrl}/monitors`;
-                } else if (operation === 'create') {
-                    method = 'POST';
-                    url = `${baseUrl}/monitors`;
-                    const requestType = this.getNodeParameter('monitorRequestType', i);
-                    body = {
-                        urls: splitComma(this.getNodeParameter('monitorUrls', i, '')),
-                        names: splitComma(this.getNodeParameter('monitorNames', i, '')),
-                        uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
-                        ssl_check: this.getNodeParameter('monitorSslCheck', i),
-                        request: {
-                            type: requestType,
-                        },
-                    };
-                    if (requestType === 'http') {
-                        body.request.method = this.getNodeParameter('monitorRequestMethod', i);
-                    }
-                    const tcpPorts = this.getNodeParameter('monitorTcpPorts', i, '');
-                    if (tcpPorts) body.tcp_ports = tcpPorts;
-                } else if (operation === 'update') {
-                    method = 'PUT';
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}`;
-                    const requestType = this.getNodeParameter('monitorRequestType', i);
-                    body = {
-                        name: this.getNodeParameter('monitorName', i, ''),
-                        url: this.getNodeParameter('monitorUrl', i, ''),
-                        ssl_check: this.getNodeParameter('monitorSslCheck', i),
-                        uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
-                        request: {
-                            type: requestType,
-                        },
-                    };
-                    if (requestType === 'http') {
-                        body.request.method = this.getNodeParameter('monitorRequestMethod', i);
-                    }
-                    const tcpPorts = this.getNodeParameter('monitorTcpPorts', i, '');
-                    if (tcpPorts) body.tcp_ports = tcpPorts;
-                } else if (operation === 'delete') {
-                    method = 'DELETE';
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}`;
-                } else if (operation === 'getStats') {
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}/stats`;
-                } else if (operation === 'getSnapshots') {
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}/snapshots`;
-                } else if (operation === 'getEvents') {
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}/events`;
-                } else if (operation === 'getChecks') {
-                    const id = this.getNodeParameter('monitorId', i);
-                    url = `${baseUrl}/monitors/${id}/checks`;
-                } else if (operation === 'addNotificationChannel') {
-                    method = 'POST';
-                    const id = this.getNodeParameter('monitorId', i);
-                    const type = this.getNodeParameter('channelType', i);
-                    const value = this.getNodeParameter('channelValue', i);
-                    url = `${baseUrl}/monitors/${id}/notification-channels/${type}`;
-
-                    if (type === 'email') body = { email: value };
-                    else if (type === 'phone-number') body = {
-                        phone_number: value,
-                        sms: this.getNodeParameter('smsValue', i, false),
-                        calls: this.getNodeParameter('callValue', i, false),
-                    };
-                    else if (type === 'slack-webhook') body = { webhook_url: value };
-                    else if (type === 'webhook' || type === 'ms-teams-webhook' || type === 'discord-webhook') body = { webhook: value };
-                    else if (type === 'signl4') body = { signl4_webhook: value };
-                    else body = { url: value };
-                }
-            } else if (resource === 'statusPage') {
-                if (operation === 'getAll') {
-                    url = `${baseUrl}/status-page`;
-                } else if (operation === 'create' || operation === 'update') {
-                    method = operation === 'create' ? 'POST' : 'PUT';
-                    url = operation === 'create' ? `${baseUrl}/status-page` : `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}`;
-                    body = {
-                        title: this.getNodeParameter('statusPageTitle', i),
-                        domain: this.getNodeParameter('statusPageDomain', i),
-                        meta_title: this.getNodeParameter('statusPageMetaTitle', i),
-                        uptime_threshold: this.getNodeParameter('statusPageUptimeThreshold', i),
-                        remove_branding: this.getNodeParameter('statusPageRemoveBranding', i),
-                        subscribe_to_updates: this.getNodeParameter('statusPageSubscribeToUpdates', i),
-                        private: this.getNodeParameter('statusPagePrivate', i),
-                        uptime_percentage_style: this.getNodeParameter('statusPageUptimePercentageStyle', i),
-                        show_location_tooltip: this.getNodeParameter('statusPageShowLocationTooltip', i),
-                        monitors: splitComma(this.getNodeParameter('statusPageMonitors', i, '')).map(Number),
-                    };
-                    if (body.private) {
-                        body.password = this.getNodeParameter('statusPagePassword', i);
-                    }
-                } else if (operation === 'delete') {
-                    method = 'DELETE';
-                    const id = this.getNodeParameter('statusPageId', i);
-                    url = `${baseUrl}/status-page/${id}`;
-                }
-            } else if (resource === 'statusPageMaintenance') {
-                if (operation === 'create' || operation === 'update') {
-                    method = operation === 'create' ? 'POST' : 'PUT';
-                    url = operation === 'create'
-                        ? `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}/maintenance`
-                        : `${baseUrl}/status-page/maintenance/${this.getNodeParameter('maintenanceId', i)}`;
-
-                    const timezoneParam = this.getNodeParameter('maintenanceTimezone', i, {});
-                    const timezone = typeof timezoneParam === 'string' ? JSON.parse(timezoneParam) : timezoneParam;
-
-                    body = {
-                        name: this.getNodeParameter('maintenanceName', i),
-                        description: this.getNodeParameter('maintenanceDescription', i),
-                        timezone: timezone,
-                        monitors: splitComma(this.getNodeParameter('maintenanceMonitors', i, '')).map(Number),
-                        date: {
-                            starting: this.getNodeParameter('maintenanceDateStarting', i),
-                            ending: this.getNodeParameter('maintenanceDateEnding', i),
-                        },
-                        time: {
-                            starting: this.getNodeParameter('maintenanceTimeStarting', i),
-                            ending: this.getNodeParameter('maintenanceTimeEnding', i),
-                        },
-                    };
-                } else if (operation === 'delete') {
-                    method = 'DELETE';
-                    const id = this.getNodeParameter('maintenanceId', i);
-                    url = `${baseUrl}/status-page/maintenance/${id}`;
-                }
-            } else if (resource === 'statusPageIncident') {
-                if (operation === 'getAll') {
-                    const id = this.getNodeParameter('statusPageId', i);
-                    url = `${baseUrl}/status-page/${id}/incidents`;
-                } else if (operation === 'create') {
-                    method = 'POST';
-                    url = `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}/incidents`;
-                    body = {
-                        title: this.getNodeParameter('incidentTitle', i),
-                        update: {
-                            status: this.getNodeParameter('incidentInitialStatus', i),
-                            message: this.getNodeParameter('incidentInitialMessage', i),
-                            date: this.getNodeParameter('incidentInitialDate', i),
-                        },
-                    };
-                } else if (operation === 'update') {
-                    method = 'PUT';
-                    url = `${baseUrl}/status-page/incidents/${this.getNodeParameter('incidentId', i)}`;
-                    body = {
-                        title: this.getNodeParameter('incidentTitle', i),
-                    };
-                } else if (operation === 'delete') {
-                    method = 'DELETE';
-                    const id = this.getNodeParameter('incidentId', i);
-                    url = `${baseUrl}/status-page/incidents/${id}`;
-                }
-            } else if (resource === 'statusPageIncidentUpdate') {
-                if (operation === 'create' || operation === 'update') {
-                    method = operation === 'create' ? 'POST' : 'PUT';
-                    url = operation === 'create'
-                        ? `${baseUrl}/incidents/${this.getNodeParameter('incidentId', i)}/incident-update`
-                        : `${baseUrl}/incidents/updates/${this.getNodeParameter('incidentUpdateId', i)}`;
-                    body = {
-                        status: this.getNodeParameter('incidentUpdateStatus', i),
-                        message: this.getNodeParameter('incidentUpdateMessage', i),
-                        date: this.getNodeParameter('incidentUpdateDate', i),
-                    };
-                } else if (operation === 'delete') {
-                    method = 'DELETE';
-                    const id = this.getNodeParameter('incidentUpdateId', i);
-                    url = `${baseUrl}/incidents/updates/${id}`;
-                }
-            }
-
-            const requestOptions = {
-                method,
-                url,
-                headers: {
-                    Authorization: `${apiKey}`,
-                },
-                json: true,
-            };
-
-            if (method !== 'GET' && method !== 'DELETE') {
-                requestOptions.body = body;
-            }
-
             try {
+                if (resource === 'monitor') {
+                    if (operation === 'get') {
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}`;
+                    }
+                    else if (operation === 'getAll') {
+                        url = `${baseUrl}/monitors`;
+                    }
+                    else if (operation === 'create') {
+                        method = 'POST';
+                        url = `${baseUrl}/monitors`;
+                        const requestType = this.getNodeParameter('monitorRequestType', i);
+                        const requestBody = {
+                            urls: splitComma(this.getNodeParameter('monitorUrls', i, '')),
+                            names: splitComma(this.getNodeParameter('monitorNames', i, '')),
+                            uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
+                            ssl_check: this.getNodeParameter('monitorSslCheck', i),
+                            request: {
+                                type: requestType,
+                            },
+                        };
+                        if (requestType === 'http') {
+                            requestBody.request.method = this.getNodeParameter('monitorRequestMethod', i);
+                        }
+                        const tcpPorts = this.getNodeParameter('monitorTcpPorts', i, '');
+                        if (tcpPorts)
+                            requestBody.tcp_ports = tcpPorts;
+                        body = requestBody;
+                    }
+                    else if (operation === 'update') {
+                        method = 'PUT';
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}`;
+                        const requestType = this.getNodeParameter('monitorRequestType', i);
+                        const requestBody = {
+                            name: this.getNodeParameter('monitorName', i, ''),
+                            url: this.getNodeParameter('monitorUrl', i, ''),
+                            ssl_check: this.getNodeParameter('monitorSslCheck', i),
+                            uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
+                            request: {
+                                type: requestType,
+                            },
+                        };
+                        if (requestType === 'http') {
+                            requestBody.request.method = this.getNodeParameter('monitorRequestMethod', i);
+                        }
+                        const tcpPorts = this.getNodeParameter('monitorTcpPorts', i, '');
+                        if (tcpPorts)
+                            requestBody.tcp_ports = tcpPorts;
+                        body = requestBody;
+                    }
+                    else if (operation === 'delete') {
+                        method = 'DELETE';
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}`;
+                    }
+                    else if (operation === 'getStats') {
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}/stats`;
+                    }
+                    else if (operation === 'getSnapshots') {
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}/snapshots`;
+                    }
+                    else if (operation === 'getEvents') {
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}/events`;
+                    }
+                    else if (operation === 'getChecks') {
+                        const id = this.getNodeParameter('monitorId', i);
+                        url = `${baseUrl}/monitors/${id}/checks`;
+                    }
+                    else if (operation === 'addNotificationChannel') {
+                        method = 'POST';
+                        const id = this.getNodeParameter('monitorId', i);
+                        const type = this.getNodeParameter('channelType', i);
+                        const value = this.getNodeParameter('channelValue', i);
+                        url = `${baseUrl}/monitors/${id}/notification-channels/${type}`;
+                        if (type === 'email')
+                            body = { email: value };
+                        else if (type === 'phone-number')
+                            body = {
+                                phone_number: value,
+                                sms: this.getNodeParameter('smsValue', i, false),
+                                calls: this.getNodeParameter('callValue', i, false),
+                            };
+                        else if (type === 'slack-webhook')
+                            body = { webhook_url: value };
+                        else if (type === 'webhook' || type === 'ms-teams-webhook' || type === 'discord-webhook')
+                            body = { webhook: value };
+                        else if (type === 'signl4')
+                            body = { signl4_webhook: value };
+                        else
+                            body = { url: value };
+                    }
+                }
+                else if (resource === 'statusPage') {
+                    if (operation === 'getAll') {
+                        url = `${baseUrl}/status-page`;
+                    }
+                    else if (operation === 'create' || operation === 'update') {
+                        method = operation === 'create' ? 'POST' : 'PUT';
+                        url = operation === 'create'
+                            ? `${baseUrl}/status-page`
+                            : `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}`;
+                        const isPrivate = this.getNodeParameter('statusPagePrivate', i);
+                        body = {
+                            title: this.getNodeParameter('statusPageTitle', i),
+                            domain: this.getNodeParameter('statusPageDomain', i),
+                            meta_title: this.getNodeParameter('statusPageMetaTitle', i),
+                            uptime_threshold: this.getNodeParameter('statusPageUptimeThreshold', i),
+                            remove_branding: this.getNodeParameter('statusPageRemoveBranding', i),
+                            subscribe_to_updates: this.getNodeParameter('statusPageSubscribeToUpdates', i),
+                            private: isPrivate,
+                            uptime_percentage_style: this.getNodeParameter('statusPageUptimePercentageStyle', i),
+                            show_location_tooltip: this.getNodeParameter('statusPageShowLocationTooltip', i),
+                            monitors: splitComma(this.getNodeParameter('statusPageMonitors', i, '')).map(Number),
+                        };
+                        if (isPrivate) {
+                            body.password = this.getNodeParameter('statusPagePassword', i);
+                        }
+                    }
+                    else if (operation === 'delete') {
+                        method = 'DELETE';
+                        const id = this.getNodeParameter('statusPageId', i);
+                        url = `${baseUrl}/status-page/${id}`;
+                    }
+                }
+                else if (resource === 'statusPageMaintenance') {
+                    if (operation === 'create' || operation === 'update') {
+                        method = operation === 'create' ? 'POST' : 'PUT';
+                        url = operation === 'create'
+                            ? `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}/maintenance`
+                            : `${baseUrl}/status-page/maintenance/${this.getNodeParameter('maintenanceId', i)}`;
+                        const timezoneParam = this.getNodeParameter('maintenanceTimezone', i, {});
+                        const timezone = typeof timezoneParam === 'string' ? JSON.parse(timezoneParam) : timezoneParam;
+                        body = {
+                            name: this.getNodeParameter('maintenanceName', i),
+                            description: this.getNodeParameter('maintenanceDescription', i),
+                            timezone,
+                            monitors: splitComma(this.getNodeParameter('maintenanceMonitors', i, '')).map(Number),
+                            date: {
+                                starting: this.getNodeParameter('maintenanceDateStarting', i),
+                                ending: this.getNodeParameter('maintenanceDateEnding', i),
+                            },
+                            time: {
+                                starting: this.getNodeParameter('maintenanceTimeStarting', i),
+                                ending: this.getNodeParameter('maintenanceTimeEnding', i),
+                            },
+                        };
+                    }
+                    else if (operation === 'delete') {
+                        method = 'DELETE';
+                        const id = this.getNodeParameter('maintenanceId', i);
+                        url = `${baseUrl}/status-page/maintenance/${id}`;
+                    }
+                }
+                else if (resource === 'statusPageIncident') {
+                    if (operation === 'getAll') {
+                        const id = this.getNodeParameter('statusPageId', i);
+                        url = `${baseUrl}/status-page/${id}/incidents`;
+                    }
+                    else if (operation === 'create') {
+                        method = 'POST';
+                        url = `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}/incidents`;
+                        body = {
+                            title: this.getNodeParameter('incidentTitle', i),
+                            update: {
+                                status: this.getNodeParameter('incidentInitialStatus', i),
+                                message: this.getNodeParameter('incidentInitialMessage', i),
+                                date: this.getNodeParameter('incidentInitialDate', i),
+                            },
+                        };
+                    }
+                    else if (operation === 'update') {
+                        method = 'PUT';
+                        url = `${baseUrl}/status-page/incidents/${this.getNodeParameter('incidentId', i)}`;
+                        body = {
+                            title: this.getNodeParameter('incidentTitle', i),
+                        };
+                    }
+                    else if (operation === 'delete') {
+                        method = 'DELETE';
+                        const id = this.getNodeParameter('incidentId', i);
+                        url = `${baseUrl}/status-page/incidents/${id}`;
+                    }
+                }
+                else if (resource === 'statusPageIncidentUpdate') {
+                    if (operation === 'create' || operation === 'update') {
+                        method = operation === 'create' ? 'POST' : 'PUT';
+                        url = operation === 'create'
+                            ? `${baseUrl}/incidents/${this.getNodeParameter('incidentId', i)}/incident-update`
+                            : `${baseUrl}/incidents/updates/${this.getNodeParameter('incidentUpdateId', i)}`;
+                        body = {
+                            status: this.getNodeParameter('incidentUpdateStatus', i),
+                            message: this.getNodeParameter('incidentUpdateMessage', i),
+                            date: this.getNodeParameter('incidentUpdateDate', i),
+                        };
+                    }
+                    else if (operation === 'delete') {
+                        method = 'DELETE';
+                        const id = this.getNodeParameter('incidentUpdateId', i);
+                        url = `${baseUrl}/incidents/updates/${id}`;
+                    }
+                }
+                const requestOptions = {
+                    method: method,
+                    url,
+                    headers: {
+                        Authorization: apiKey,
+                    },
+                    json: true,
+                };
+                if (method !== 'GET' && method !== 'DELETE') {
+                    requestOptions.body = body;
+                }
                 const response = await this.helpers.httpRequest(requestOptions);
                 returnData.push({ json: response });
-            } catch (error) {
+            }
+            catch (error) {
                 if (this.continueOnFail()) {
                     returnData.push({ json: { error: error.message } });
-                } else {
-                    throw error;
+                    continue;
                 }
+                throw new n8n_workflow_1.NodeOperationError(this.getNode(), error, { itemIndex: i });
             }
         }
-
         return [returnData];
     }
 }
-
-module.exports = {
-    Pulsetic,
-};
+exports.Pulsetic = Pulsetic;
+//# sourceMappingURL=Pulsetic.node.js.map
