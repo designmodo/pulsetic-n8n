@@ -1,25 +1,31 @@
 {
     "name": "@pulsetic/n8n-nodes-pulsetic",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "Pulsetic API integration for n8n",
     "keywords": [
         "n8n-community-node-package"
     ],
-    "main": "Pulsetic.node.js",
-    "author": {
-    	"name": "Pulsetic",
-    	"email": "info@pulsetic.com",
-    	"url": "https://pulsetic.com/"
+    "license": "MIT",
+    "homepage": "https://github.com/designmodo/pulsetic-n8n#readme",
+    "author": "Pulsetic <info@pulsetic.com> (https://pulsetic.com/)",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/designmodo/pulsetic-n8n.git"
     },
+    "bugs": {
+        "url": "https://github.com/designmodo/pulsetic-n8n/issues"
+    },
+    "main": "index.js",
     "scripts": {
-        "lint": "eslint . --ext .js"
+        "build": "tsc && cp nodes/Pulsetic/Pulsetic.node.json dist/nodes/Pulsetic/ && cp pulsetic.svg dist/nodes/Pulsetic/",
+        "prepublishOnly": "npm run build"
     },
     "n8n": {
         "credentials": [
-            "PulseticApi.credentials.js"
+            "dist/credentials/PulseticApi.credentials.js"
         ],
         "nodes": [
-            "Pulsetic.node.js"
+            "dist/nodes/Pulsetic/Pulsetic.node.js"
         ]
     },
     "engines": {
@@ -30,11 +36,13 @@
         "n8n-workflow": "*"
     },
     "devDependencies": {
-        "eslint": "^8.57.1"
+        "@types/node": "^18.19.130",
+        "n8n-workflow": "^1.120.9",
+        "typescript": "^5.9.3"
     },
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-    	"url": "https://github.com/designmodo/pulsetic-n8n"
-    }
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ]
 }
