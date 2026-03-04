@@ -1,9 +1,9 @@
 import {
 	IAuthenticateGeneric,
+	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 } from 'n8n-workflow';
-
 export class PulseticApi implements ICredentialType {
 	name = 'pulseticApi';
 	displayName = 'Pulsetic API';
@@ -19,7 +19,6 @@ export class PulseticApi implements ICredentialType {
 			},
 		},
 	];
-
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
@@ -28,5 +27,11 @@ export class PulseticApi implements ICredentialType {
 			},
 		},
 	};
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://api.pulsetic.com',
+			url: '/api/public/monitors',
+			method: 'GET',
+		},
+	};
 }
-

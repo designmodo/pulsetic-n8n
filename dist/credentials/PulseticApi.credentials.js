@@ -25,6 +25,13 @@ class PulseticApi {
                 },
             },
         };
+        this.test = {
+            request: {
+                baseURL: 'https://api.pulsetic.com',
+                url: '/api/public/monitors',
+                method: 'GET',
+            },
+        };
     }
 }
 exports.PulseticApi = PulseticApi;
