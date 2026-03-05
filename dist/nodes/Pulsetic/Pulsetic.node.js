@@ -45,7 +45,7 @@ class Pulsetic {
                     noDataExpression: true,
                     displayOptions: { show: { resource: ['monitor'] } },
                     options: [
-                        { name: 'Get', value: 'get', action: 'Get a monitorr' },
+                        { name: 'Get', value: 'get', action: 'Get a monitor' },
                         { name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
                         { name: 'Create', value: 'create', action: 'Create a monitor' },
                         { name: 'Update', value: 'update', action: 'Update a monitor' },
@@ -826,11 +826,11 @@ class Pulsetic {
                     requestOptions.body = body;
                 }
                 const response = await this.helpers.httpRequest(requestOptions);
-                returnData.push({ json: response });
+                returnData.push({ json: response, pairedItem: { item: i } });
             }
             catch (error) {
                 if (this.continueOnFail()) {
-                    returnData.push({ json: { error: error.message } });
+                    returnData.push({ json: { error: error.message }, pairedItem: { item: i } });
                     continue;
                 }
                 throw new n8n_workflow_1.NodeOperationError(this.getNode(), error, { itemIndex: i });
