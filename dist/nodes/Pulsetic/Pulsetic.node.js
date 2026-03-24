@@ -23,6 +23,7 @@ class Pulsetic {
                 },
             ],
             properties: [
+                // ─── Resource ────────────────────────────────────────────────────────────────
                 {
                     displayName: 'Resource',
                     name: 'resource',
@@ -37,7 +38,7 @@ class Pulsetic {
                     ],
                     default: 'monitor',
                 },
-                // Monitor Operations
+                // ─── Operations ──────────────────────────────────────────────────────────────
                 {
                     displayName: 'Operation',
                     name: 'operation',
@@ -58,7 +59,6 @@ class Pulsetic {
                     ],
                     default: 'get',
                 },
-                // Status Page Operations
                 {
                     displayName: 'Operation',
                     name: 'operation',
@@ -73,7 +73,6 @@ class Pulsetic {
                     ],
                     default: 'getAll',
                 },
-                // Maintenance Operations
                 {
                     displayName: 'Operation',
                     name: 'operation',
@@ -87,7 +86,6 @@ class Pulsetic {
                     ],
                     default: 'create',
                 },
-                // Incident Operations
                 {
                     displayName: 'Operation',
                     name: 'operation',
@@ -102,7 +100,6 @@ class Pulsetic {
                     ],
                     default: 'getAll',
                 },
-                // Incident Update Operations
                 {
                     displayName: 'Operation',
                     name: 'operation',
@@ -116,7 +113,7 @@ class Pulsetic {
                     ],
                     default: 'create',
                 },
-                // --- IDs ---
+                // ─── IDs ─────────────────────────────────────────────────────────────────────
                 {
                     displayName: 'Monitor ID',
                     name: 'monitorId',
@@ -136,12 +133,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPage'],
-                            operation: ['update', 'delete'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPage'], operation: ['update', 'delete'] } },
                 },
                 {
                     displayName: 'Status Page ID',
@@ -149,12 +141,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPageMaintenance'],
-                            operation: ['create'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create'] } },
                 },
                 {
                     displayName: 'Status Page ID',
@@ -162,12 +149,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPageIncident'],
-                            operation: ['getAll', 'create'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPageIncident'], operation: ['getAll', 'create'] } },
                 },
                 {
                     displayName: 'Maintenance ID',
@@ -175,12 +157,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPageMaintenance'],
-                            operation: ['update', 'delete'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['update', 'delete'] } },
                 },
                 {
                     displayName: 'Incident ID',
@@ -188,12 +165,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPageIncident'],
-                            operation: ['update', 'delete'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPageIncident'], operation: ['update', 'delete'] } },
                 },
                 {
                     displayName: 'Incident ID',
@@ -201,12 +173,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPageIncidentUpdate'],
-                            operation: ['create'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create'] } },
                 },
                 {
                     displayName: 'Incident Update ID',
@@ -214,14 +181,9 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     required: true,
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPageIncidentUpdate'],
-                            operation: ['update', 'delete'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['update', 'delete'] } },
                 },
-                // --- Notification Channel ---
+                // ─── Notification Channel ─────────────────────────────────────────────────────
                 {
                     displayName: 'Channel Type',
                     name: 'channelType',
@@ -236,12 +198,7 @@ class Pulsetic {
                         { name: 'MS Teams Webhook', value: 'ms-teams-webhook' },
                     ],
                     default: 'email',
-                    displayOptions: {
-                        show: {
-                            resource: ['monitor'],
-                            operation: ['addNotificationChannel'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['monitor'], operation: ['addNotificationChannel'] } },
                 },
                 {
                     displayName: 'Value',
@@ -249,12 +206,7 @@ class Pulsetic {
                     type: 'string',
                     default: '',
                     description: 'Email, Phone Number, or Webhook URL',
-                    displayOptions: {
-                        show: {
-                            resource: ['monitor'],
-                            operation: ['addNotificationChannel'],
-                        },
-                    },
+                    displayOptions: { show: { resource: ['monitor'], operation: ['addNotificationChannel'] } },
                 },
                 {
                     displayName: 'SMS',
@@ -284,49 +236,29 @@ class Pulsetic {
                         },
                     },
                 },
-                // --- Monitor Fields ---
+                // ─── Monitor: Create (required fields) ───────────────────────────────────────
                 {
                     displayName: 'URLs',
                     name: 'monitorUrls',
                     type: 'string',
                     default: '',
                     required: true,
-                    description: 'Comma-separated URLs',
+                    description: 'Comma-separated URLs to monitor',
                     displayOptions: { show: { resource: ['monitor'], operation: ['create'] } },
-                },
-                {
-                    displayName: 'Names',
-                    name: 'monitorNames',
-                    type: 'string',
-                    default: '',
-                    description: 'Comma-separated Names',
-                    displayOptions: { show: { resource: ['monitor'], operation: ['create'] } },
-                },
-                {
-                    displayName: 'Name',
-                    name: 'monitorName',
-                    type: 'string',
-                    default: '',
-                    displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
-                },
-                {
-                    displayName: 'URL',
-                    name: 'monitorUrl',
-                    type: 'string',
-                    default: '',
-                    displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
                 },
                 {
                     displayName: 'Uptime Check Frequency',
                     name: 'monitorUptimeCheckFrequency',
                     type: 'number',
-                    default: 1,
+                    default: 300,
+                    required: true,
                     displayOptions: { show: { resource: ['monitor'], operation: ['create', 'update'] } },
                 },
                 {
                     displayName: 'Request Type',
                     name: 'monitorRequestType',
                     type: 'options',
+                    required: true,
                     options: [
                         { name: 'HTTP', value: 'http' },
                         { name: 'ICMP', value: 'icmp' },
@@ -339,6 +271,7 @@ class Pulsetic {
                     displayName: 'Request Method',
                     name: 'monitorRequestMethod',
                     type: 'options',
+                    required: true,
                     options: [
                         { name: 'GET', value: 'get' },
                         { name: 'POST', value: 'post' },
@@ -362,13 +295,14 @@ class Pulsetic {
                     name: 'monitorSslCheck',
                     type: 'boolean',
                     default: false,
-                    displayOptions: { show: { resource: ['monitor'], operation: ['update', 'create'] } },
+                    displayOptions: { show: { resource: ['monitor'], operation: ['create', 'update'] } },
                 },
                 {
                     displayName: 'TCP Ports',
                     name: 'monitorTcpPorts',
                     type: 'string',
                     default: '',
+                    required: true,
                     displayOptions: {
                         show: {
                             resource: ['monitor'],
@@ -377,82 +311,58 @@ class Pulsetic {
                         },
                     },
                 },
-                // --- Status Page Fields ---
+                // Monitor Create – Additional Fields
+                {
+                    displayName: 'Additional Fields',
+                    name: 'additionalFields',
+                    type: 'collection',
+                    placeholder: 'Add Field',
+                    default: {},
+                    displayOptions: { show: { resource: ['monitor'], operation: ['create'] } },
+                    options: [
+                        {
+                            displayName: 'Names',
+                            name: 'monitorNames',
+                            type: 'string',
+                            default: '',
+                            description: 'Comma-separated display names (one per URL)',
+                        },
+                    ],
+                },
+                // ─── Monitor: Update (required fields) ───────────────────────────────────────
+                {
+                    displayName: 'URL',
+                    name: 'monitorUrl',
+                    type: 'string',
+                    default: '',
+                    required: true,
+                    displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
+                },
+                // Monitor Update – Additional Fields
+                {
+                    displayName: 'Additional Fields',
+                    name: 'additionalFields',
+                    type: 'collection',
+                    placeholder: 'Add Field',
+                    default: {},
+                    displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
+                    options: [
+                        {
+                            displayName: 'Name',
+                            name: 'monitorName',
+                            type: 'string',
+                            default: '',
+                            description: 'Display name for the monitor',
+                        },
+                    ],
+                },
+                // ─── Status Page: Create / Update ────────────────────────────────────────────
                 {
                     displayName: 'Title',
                     name: 'statusPageTitle',
                     type: 'string',
                     default: '',
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Domain',
-                    name: 'statusPageDomain',
-                    type: 'string',
-                    default: '',
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Meta Title',
-                    name: 'statusPageMetaTitle',
-                    type: 'string',
-                    default: '',
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Uptime Threshold',
-                    name: 'statusPageUptimeThreshold',
-                    type: 'number',
-                    default: 0.9,
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Remove Branding',
-                    name: 'statusPageRemoveBranding',
-                    type: 'boolean',
-                    default: false,
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Subscribe to Updates',
-                    name: 'statusPageSubscribeToUpdates',
-                    type: 'boolean',
-                    default: false,
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Private',
-                    name: 'statusPagePrivate',
-                    type: 'boolean',
-                    default: false,
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Password',
-                    name: 'statusPagePassword',
-                    type: 'string',
-                    typeOptions: { password: true },
-                    default: '',
-                    displayOptions: {
-                        show: {
-                            resource: ['statusPage'],
-                            operation: ['create', 'update'],
-                            statusPagePrivate: [true],
-                        },
-                    },
-                },
-                {
-                    displayName: 'Uptime Percentage Style',
-                    name: 'statusPageUptimePercentageStyle',
-                    type: 'boolean',
-                    default: false,
-                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-                },
-                {
-                    displayName: 'Show Location Tooltip',
-                    name: 'statusPageShowLocationTooltip',
-                    type: 'boolean',
-                    default: true,
+                    required: true,
                     displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
                 },
                 {
@@ -460,15 +370,84 @@ class Pulsetic {
                     name: 'statusPageMonitors',
                     type: 'string',
                     default: '',
+                    required: true,
                     description: 'Comma-separated Monitor IDs',
                     displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
                 },
-                // --- Maintenance Fields ---
+                // Status Page – Additional Fields
+                {
+                    displayName: 'Additional Fields',
+                    name: 'additionalFields',
+                    type: 'collection',
+                    placeholder: 'Add Field',
+                    default: {},
+                    displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
+                    options: [
+                        {
+                            displayName: 'Domain',
+                            name: 'statusPageDomain',
+                            type: 'string',
+                            default: '',
+                        },
+                        {
+                            displayName: 'Meta Title',
+                            name: 'statusPageMetaTitle',
+                            type: 'string',
+                            default: '',
+                        },
+                        {
+                            displayName: 'Password',
+                            name: 'statusPagePassword',
+                            type: 'string',
+                            typeOptions: { password: true },
+                            default: '',
+                            description: 'Required when Private is enabled',
+                        },
+                        {
+                            displayName: 'Private',
+                            name: 'statusPagePrivate',
+                            type: 'boolean',
+                            default: false,
+                        },
+                        {
+                            displayName: 'Remove Branding',
+                            name: 'statusPageRemoveBranding',
+                            type: 'boolean',
+                            default: false,
+                        },
+                        {
+                            displayName: 'Show Location Tooltip',
+                            name: 'statusPageShowLocationTooltip',
+                            type: 'boolean',
+                            default: true,
+                        },
+                        {
+                            displayName: 'Subscribe to Updates',
+                            name: 'statusPageSubscribeToUpdates',
+                            type: 'boolean',
+                            default: false,
+                        },
+                        {
+                            displayName: 'Uptime Percentage Style',
+                            name: 'statusPageUptimePercentageStyle',
+                            type: 'boolean',
+                            default: false,
+                        },
+                        {
+                            displayName: 'Uptime Threshold',
+                            name: 'statusPageUptimeThreshold',
+                            type: 'number',
+                            default: 0.9,
+                        },
+                    ],
+                },
+                // ─── Maintenance: Create / Update (all required) ─────────────────────────────
                 {
                     displayName: 'Name',
                     name: 'maintenanceName',
                     type: 'string',
                     default: '',
+                    required: true,
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
                 {
@@ -476,6 +455,7 @@ class Pulsetic {
                     name: 'maintenanceDescription',
                     type: 'string',
                     default: '',
+                    required: true,
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
                 {
@@ -483,6 +463,7 @@ class Pulsetic {
                     name: 'maintenanceTimezone',
                     type: 'json',
                     default: '{}',
+                    required: true,
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
                 {
@@ -490,6 +471,7 @@ class Pulsetic {
                     name: 'maintenanceMonitors',
                     type: 'string',
                     default: '',
+                    required: true,
                     description: 'Comma-separated Monitor IDs',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
@@ -498,6 +480,7 @@ class Pulsetic {
                     name: 'maintenanceDateStarting',
                     type: 'string',
                     default: '',
+                    required: true,
                     placeholder: 'YYYY-MM-DD',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
@@ -506,6 +489,7 @@ class Pulsetic {
                     name: 'maintenanceDateEnding',
                     type: 'string',
                     default: '',
+                    required: true,
                     placeholder: 'YYYY-MM-DD',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
@@ -514,6 +498,7 @@ class Pulsetic {
                     name: 'maintenanceTimeStarting',
                     type: 'string',
                     default: '',
+                    required: true,
                     placeholder: '12:00 PM',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
@@ -522,21 +507,24 @@ class Pulsetic {
                     name: 'maintenanceTimeEnding',
                     type: 'string',
                     default: '',
+                    required: true,
                     placeholder: '12:00 PM',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
-                // --- Incident Fields ---
+                // ─── Incident: Create / Update (all required) ────────────────────────────────
                 {
                     displayName: 'Title',
                     name: 'incidentTitle',
                     type: 'string',
                     default: '',
+                    required: true,
                     displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create', 'update'] } },
                 },
                 {
                     displayName: 'Status',
                     name: 'incidentInitialStatus',
                     type: 'options',
+                    required: true,
                     options: [
                         { name: 'Investigating', value: 'investigating' },
                         { name: 'Identified', value: 'identified' },
@@ -552,6 +540,7 @@ class Pulsetic {
                     name: 'incidentInitialMessage',
                     type: 'string',
                     default: '',
+                    required: true,
                     displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create'] } },
                 },
                 {
@@ -559,14 +548,16 @@ class Pulsetic {
                     name: 'incidentInitialDate',
                     type: 'string',
                     default: '',
+                    required: true,
                     placeholder: 'YYYY-MM-DD HH:mm',
                     displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create'] } },
                 },
-                // --- Incident Update Fields ---
+                // ─── Incident Update: Create / Update (all required) ─────────────────────────
                 {
                     displayName: 'Status',
                     name: 'incidentUpdateStatus',
                     type: 'options',
+                    required: true,
                     options: [
                         { name: 'Investigating', value: 'investigating' },
                         { name: 'Identified', value: 'identified' },
@@ -582,6 +573,7 @@ class Pulsetic {
                     name: 'incidentUpdateMessage',
                     type: 'string',
                     default: '',
+                    required: true,
                     displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create', 'update'] } },
                 },
                 {
@@ -589,6 +581,7 @@ class Pulsetic {
                     name: 'incidentUpdateDate',
                     type: 'string',
                     default: '',
+                    required: true,
                     placeholder: 'YYYY-MM-DD HH:mm:ss',
                     displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create', 'update'] } },
                 },
@@ -600,7 +593,7 @@ class Pulsetic {
         const returnData = [];
         const credentials = await this.getCredentials('pulseticApi');
         const apiKey = credentials.apiKey;
-        const splitComma = (str) => (str ? str.split(',').map((s) => s.trim()) : []);
+        const splitComma = (str) => str ? str.split(',').map((s) => s.trim()).filter(Boolean) : [];
         for (let i = 0; i < items.length; i++) {
             const resource = this.getNodeParameter('resource', i);
             const operation = this.getNodeParameter('operation', i);
@@ -620,15 +613,14 @@ class Pulsetic {
                     else if (operation === 'create') {
                         method = 'POST';
                         url = `${baseUrl}/monitors`;
+                        const additionalFields = this.getNodeParameter('additionalFields', i, {});
                         const requestType = this.getNodeParameter('monitorRequestType', i);
                         const requestBody = {
-                            urls: splitComma(this.getNodeParameter('monitorUrls', i, '')),
-                            names: splitComma(this.getNodeParameter('monitorNames', i, '')),
+                            urls: splitComma(this.getNodeParameter('monitorUrls', i)),
+                            names: splitComma(additionalFields.monitorNames || ''),
                             uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
                             ssl_check: this.getNodeParameter('monitorSslCheck', i),
-                            request: {
-                                type: requestType,
-                            },
+                            request: { type: requestType },
                         };
                         if (requestType === 'http') {
                             requestBody.request.method = this.getNodeParameter('monitorRequestMethod', i);
@@ -642,15 +634,14 @@ class Pulsetic {
                         method = 'PUT';
                         const id = this.getNodeParameter('monitorId', i);
                         url = `${baseUrl}/monitors/${id}`;
+                        const additionalFields = this.getNodeParameter('additionalFields', i, {});
                         const requestType = this.getNodeParameter('monitorRequestType', i);
                         const requestBody = {
-                            name: this.getNodeParameter('monitorName', i, ''),
-                            url: this.getNodeParameter('monitorUrl', i, ''),
+                            name: additionalFields.monitorName || '',
+                            url: this.getNodeParameter('monitorUrl', i),
                             ssl_check: this.getNodeParameter('monitorSslCheck', i),
                             uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
-                            request: {
-                                type: requestType,
-                            },
+                            request: { type: requestType },
                         };
                         if (requestType === 'http') {
                             requestBody.request.method = this.getNodeParameter('monitorRequestMethod', i);
@@ -714,21 +705,22 @@ class Pulsetic {
                         url = operation === 'create'
                             ? `${baseUrl}/status-page`
                             : `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}`;
-                        const isPrivate = this.getNodeParameter('statusPagePrivate', i);
+                        const additionalFields = this.getNodeParameter('additionalFields', i, {});
+                        const isPrivate = additionalFields.statusPagePrivate || false;
                         body = {
                             title: this.getNodeParameter('statusPageTitle', i),
-                            domain: this.getNodeParameter('statusPageDomain', i),
-                            meta_title: this.getNodeParameter('statusPageMetaTitle', i),
-                            uptime_threshold: this.getNodeParameter('statusPageUptimeThreshold', i),
-                            remove_branding: this.getNodeParameter('statusPageRemoveBranding', i),
-                            subscribe_to_updates: this.getNodeParameter('statusPageSubscribeToUpdates', i),
+                            domain: additionalFields.statusPageDomain || '',
+                            meta_title: additionalFields.statusPageMetaTitle || '',
+                            uptime_threshold: additionalFields.statusPageUptimeThreshold !== undefined ? additionalFields.statusPageUptimeThreshold : 0.9,
+                            remove_branding: additionalFields.statusPageRemoveBranding || false,
+                            subscribe_to_updates: additionalFields.statusPageSubscribeToUpdates || false,
                             private: isPrivate,
-                            uptime_percentage_style: this.getNodeParameter('statusPageUptimePercentageStyle', i),
-                            show_location_tooltip: this.getNodeParameter('statusPageShowLocationTooltip', i),
-                            monitors: splitComma(this.getNodeParameter('statusPageMonitors', i, '')).map(Number),
+                            uptime_percentage_style: additionalFields.statusPageUptimePercentageStyle || false,
+                            show_location_tooltip: additionalFields.statusPageShowLocationTooltip !== undefined ? additionalFields.statusPageShowLocationTooltip : true,
+                            monitors: splitComma(this.getNodeParameter('statusPageMonitors', i, '')).map(Number).filter((n) => !isNaN(n)),
                         };
                         if (isPrivate) {
-                            body.password = this.getNodeParameter('statusPagePassword', i);
+                            body.password = additionalFields.statusPagePassword;
                         }
                     }
                     else if (operation === 'delete') {
