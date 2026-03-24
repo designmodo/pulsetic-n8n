@@ -28,6 +28,7 @@ export class Pulsetic implements INodeType {
 			},
 		],
 		properties: [
+			// ─── Resource ────────────────────────────────────────────────────────────────
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -42,7 +43,8 @@ export class Pulsetic implements INodeType {
 				],
 				default: 'monitor',
 			},
-			// Monitor Operations
+
+			// ─── Operations ──────────────────────────────────────────────────────────────
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -63,7 +65,6 @@ export class Pulsetic implements INodeType {
 				],
 				default: 'get',
 			},
-			// Status Page Operations
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -78,7 +79,6 @@ export class Pulsetic implements INodeType {
 				],
 				default: 'getAll',
 			},
-			// Maintenance Operations
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -92,7 +92,6 @@ export class Pulsetic implements INodeType {
 				],
 				default: 'create',
 			},
-			// Incident Operations
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -107,7 +106,6 @@ export class Pulsetic implements INodeType {
 				],
 				default: 'getAll',
 			},
-			// Incident Update Operations
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -122,7 +120,7 @@ export class Pulsetic implements INodeType {
 				default: 'create',
 			},
 
-			// --- IDs ---
+			// ─── IDs ─────────────────────────────────────────────────────────────────────
 			{
 				displayName: 'Monitor ID',
 				name: 'monitorId',
@@ -142,12 +140,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPage'],
-						operation: ['update', 'delete'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPage'], operation: ['update', 'delete'] } },
 			},
 			{
 				displayName: 'Status Page ID',
@@ -155,12 +148,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPageMaintenance'],
-						operation: ['create'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create'] } },
 			},
 			{
 				displayName: 'Status Page ID',
@@ -168,12 +156,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPageIncident'],
-						operation: ['getAll', 'create'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPageIncident'], operation: ['getAll', 'create'] } },
 			},
 			{
 				displayName: 'Maintenance ID',
@@ -181,12 +164,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPageMaintenance'],
-						operation: ['update', 'delete'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['update', 'delete'] } },
 			},
 			{
 				displayName: 'Incident ID',
@@ -194,12 +172,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPageIncident'],
-						operation: ['update', 'delete'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPageIncident'], operation: ['update', 'delete'] } },
 			},
 			{
 				displayName: 'Incident ID',
@@ -207,12 +180,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPageIncidentUpdate'],
-						operation: ['create'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create'] } },
 			},
 			{
 				displayName: 'Incident Update ID',
@@ -220,15 +188,10 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				required: true,
-				displayOptions: {
-					show: {
-						resource: ['statusPageIncidentUpdate'],
-						operation: ['update', 'delete'],
-					},
-				},
+				displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['update', 'delete'] } },
 			},
 
-			// --- Notification Channel ---
+			// ─── Notification Channel ─────────────────────────────────────────────────────
 			{
 				displayName: 'Channel Type',
 				name: 'channelType',
@@ -243,12 +206,7 @@ export class Pulsetic implements INodeType {
 					{ name: 'MS Teams Webhook', value: 'ms-teams-webhook' },
 				],
 				default: 'email',
-				displayOptions: {
-					show: {
-						resource: ['monitor'],
-						operation: ['addNotificationChannel'],
-					},
-				},
+				displayOptions: { show: { resource: ['monitor'], operation: ['addNotificationChannel'] } },
 			},
 			{
 				displayName: 'Value',
@@ -256,12 +214,7 @@ export class Pulsetic implements INodeType {
 				type: 'string',
 				default: '',
 				description: 'Email, Phone Number, or Webhook URL',
-				displayOptions: {
-					show: {
-						resource: ['monitor'],
-						operation: ['addNotificationChannel'],
-					},
-				},
+				displayOptions: { show: { resource: ['monitor'], operation: ['addNotificationChannel'] } },
 			},
 			{
 				displayName: 'SMS',
@@ -292,49 +245,29 @@ export class Pulsetic implements INodeType {
 				},
 			},
 
-			// --- Monitor Fields ---
+			// ─── Monitor: Create (required fields) ───────────────────────────────────────
 			{
 				displayName: 'URLs',
 				name: 'monitorUrls',
 				type: 'string',
 				default: '',
 				required: true,
-				description: 'Comma-separated URLs',
+				description: 'Comma-separated URLs to monitor',
 				displayOptions: { show: { resource: ['monitor'], operation: ['create'] } },
-			},
-			{
-				displayName: 'Names',
-				name: 'monitorNames',
-				type: 'string',
-				default: '',
-				description: 'Comma-separated Names',
-				displayOptions: { show: { resource: ['monitor'], operation: ['create'] } },
-			},
-			{
-				displayName: 'Name',
-				name: 'monitorName',
-				type: 'string',
-				default: '',
-				displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
-			},
-			{
-				displayName: 'URL',
-				name: 'monitorUrl',
-				type: 'string',
-				default: '',
-				displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
 			},
 			{
 				displayName: 'Uptime Check Frequency',
 				name: 'monitorUptimeCheckFrequency',
 				type: 'number',
-				default: 1,
+				default: 300,
+				required: true,
 				displayOptions: { show: { resource: ['monitor'], operation: ['create', 'update'] } },
 			},
 			{
 				displayName: 'Request Type',
 				name: 'monitorRequestType',
 				type: 'options',
+				required: true,
 				options: [
 					{ name: 'HTTP', value: 'http' },
 					{ name: 'ICMP', value: 'icmp' },
@@ -347,6 +280,7 @@ export class Pulsetic implements INodeType {
 				displayName: 'Request Method',
 				name: 'monitorRequestMethod',
 				type: 'options',
+				required: true,
 				options: [
 					{ name: 'GET', value: 'get' },
 					{ name: 'POST', value: 'post' },
@@ -370,13 +304,14 @@ export class Pulsetic implements INodeType {
 				name: 'monitorSslCheck',
 				type: 'boolean',
 				default: false,
-				displayOptions: { show: { resource: ['monitor'], operation: ['update', 'create'] } },
+				displayOptions: { show: { resource: ['monitor'], operation: ['create', 'update'] } },
 			},
 			{
 				displayName: 'TCP Ports',
 				name: 'monitorTcpPorts',
 				type: 'string',
 				default: '',
+				required: true,
 				displayOptions: {
 					show: {
 						resource: ['monitor'],
@@ -385,83 +320,60 @@ export class Pulsetic implements INodeType {
 					},
 				},
 			},
+			// Monitor Create – Additional Fields
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				displayOptions: { show: { resource: ['monitor'], operation: ['create'] } },
+				options: [
+					{
+						displayName: 'Names',
+						name: 'monitorNames',
+						type: 'string',
+						default: '',
+						description: 'Comma-separated display names (one per URL)',
+					},
+				],
+			},
 
-			// --- Status Page Fields ---
+			// ─── Monitor: Update (required fields) ───────────────────────────────────────
+			{
+				displayName: 'URL',
+				name: 'monitorUrl',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
+			},
+			// Monitor Update – Additional Fields
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				displayOptions: { show: { resource: ['monitor'], operation: ['update'] } },
+				options: [
+					{
+						displayName: 'Name',
+						name: 'monitorName',
+						type: 'string',
+						default: '',
+						description: 'Display name for the monitor',
+					},
+				],
+			},
+
+			// ─── Status Page: Create / Update ────────────────────────────────────────────
 			{
 				displayName: 'Title',
 				name: 'statusPageTitle',
 				type: 'string',
 				default: '',
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Domain',
-				name: 'statusPageDomain',
-				type: 'string',
-				default: '',
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Meta Title',
-				name: 'statusPageMetaTitle',
-				type: 'string',
-				default: '',
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Uptime Threshold',
-				name: 'statusPageUptimeThreshold',
-				type: 'number',
-				default: 0.9,
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Remove Branding',
-				name: 'statusPageRemoveBranding',
-				type: 'boolean',
-				default: false,
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Subscribe to Updates',
-				name: 'statusPageSubscribeToUpdates',
-				type: 'boolean',
-				default: false,
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Private',
-				name: 'statusPagePrivate',
-				type: 'boolean',
-				default: false,
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Password',
-				name: 'statusPagePassword',
-				type: 'string',
-				typeOptions: { password: true },
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['statusPage'],
-						operation: ['create', 'update'],
-						statusPagePrivate: [true],
-					},
-				},
-			},
-			{
-				displayName: 'Uptime Percentage Style',
-				name: 'statusPageUptimePercentageStyle',
-				type: 'boolean',
-				default: false,
-				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
-			},
-			{
-				displayName: 'Show Location Tooltip',
-				name: 'statusPageShowLocationTooltip',
-				type: 'boolean',
-				default: true,
+				required: true,
 				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
 			},
 			{
@@ -469,16 +381,85 @@ export class Pulsetic implements INodeType {
 				name: 'statusPageMonitors',
 				type: 'string',
 				default: '',
+				required: true,
 				description: 'Comma-separated Monitor IDs',
 				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
 			},
+			// Status Page – Additional Fields
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				displayOptions: { show: { resource: ['statusPage'], operation: ['create', 'update'] } },
+				options: [
+					{
+						displayName: 'Domain',
+						name: 'statusPageDomain',
+						type: 'string',
+						default: '',
+					},
+					{
+						displayName: 'Meta Title',
+						name: 'statusPageMetaTitle',
+						type: 'string',
+						default: '',
+					},
+					{
+						displayName: 'Password',
+						name: 'statusPagePassword',
+						type: 'string',
+						typeOptions: { password: true },
+						default: '',
+						description: 'Required when Private is enabled',
+					},
+					{
+						displayName: 'Private',
+						name: 'statusPagePrivate',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						displayName: 'Remove Branding',
+						name: 'statusPageRemoveBranding',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						displayName: 'Show Location Tooltip',
+						name: 'statusPageShowLocationTooltip',
+						type: 'boolean',
+						default: true,
+					},
+					{
+						displayName: 'Subscribe to Updates',
+						name: 'statusPageSubscribeToUpdates',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						displayName: 'Uptime Percentage Style',
+						name: 'statusPageUptimePercentageStyle',
+						type: 'boolean',
+						default: false,
+					},
+					{
+						displayName: 'Uptime Threshold',
+						name: 'statusPageUptimeThreshold',
+						type: 'number',
+						default: 0.9,
+					},
+				],
+			},
 
-			// --- Maintenance Fields ---
+			// ─── Maintenance: Create / Update (all required) ─────────────────────────────
 			{
 				displayName: 'Name',
 				name: 'maintenanceName',
 				type: 'string',
 				default: '',
+				required: true,
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
 			{
@@ -486,6 +467,7 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceDescription',
 				type: 'string',
 				default: '',
+				required: true,
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
 			{
@@ -493,6 +475,7 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceTimezone',
 				type: 'json',
 				default: '{}',
+				required: true,
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
 			{
@@ -500,6 +483,7 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceMonitors',
 				type: 'string',
 				default: '',
+				required: true,
 				description: 'Comma-separated Monitor IDs',
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
@@ -508,6 +492,7 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceDateStarting',
 				type: 'string',
 				default: '',
+				required: true,
 				placeholder: 'YYYY-MM-DD',
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
@@ -516,6 +501,7 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceDateEnding',
 				type: 'string',
 				default: '',
+				required: true,
 				placeholder: 'YYYY-MM-DD',
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
@@ -524,6 +510,7 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceTimeStarting',
 				type: 'string',
 				default: '',
+				required: true,
 				placeholder: '12:00 PM',
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
@@ -532,22 +519,25 @@ export class Pulsetic implements INodeType {
 				name: 'maintenanceTimeEnding',
 				type: 'string',
 				default: '',
+				required: true,
 				placeholder: '12:00 PM',
 				displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
 			},
 
-			// --- Incident Fields ---
+			// ─── Incident: Create / Update (all required) ────────────────────────────────
 			{
 				displayName: 'Title',
 				name: 'incidentTitle',
 				type: 'string',
 				default: '',
+				required: true,
 				displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create', 'update'] } },
 			},
 			{
 				displayName: 'Status',
 				name: 'incidentInitialStatus',
 				type: 'options',
+				required: true,
 				options: [
 					{ name: 'Investigating', value: 'investigating' },
 					{ name: 'Identified', value: 'identified' },
@@ -563,6 +553,7 @@ export class Pulsetic implements INodeType {
 				name: 'incidentInitialMessage',
 				type: 'string',
 				default: '',
+				required: true,
 				displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create'] } },
 			},
 			{
@@ -570,15 +561,17 @@ export class Pulsetic implements INodeType {
 				name: 'incidentInitialDate',
 				type: 'string',
 				default: '',
+				required: true,
 				placeholder: 'YYYY-MM-DD HH:mm',
 				displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create'] } },
 			},
 
-			// --- Incident Update Fields ---
+			// ─── Incident Update: Create / Update (all required) ─────────────────────────
 			{
 				displayName: 'Status',
 				name: 'incidentUpdateStatus',
 				type: 'options',
+				required: true,
 				options: [
 					{ name: 'Investigating', value: 'investigating' },
 					{ name: 'Identified', value: 'identified' },
@@ -594,6 +587,7 @@ export class Pulsetic implements INodeType {
 				name: 'incidentUpdateMessage',
 				type: 'string',
 				default: '',
+				required: true,
 				displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create', 'update'] } },
 			},
 			{
@@ -601,6 +595,7 @@ export class Pulsetic implements INodeType {
 				name: 'incidentUpdateDate',
 				type: 'string',
 				default: '',
+				required: true,
 				placeholder: 'YYYY-MM-DD HH:mm:ss',
 				displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create', 'update'] } },
 			},
@@ -613,7 +608,8 @@ export class Pulsetic implements INodeType {
 		const credentials = await this.getCredentials('pulseticApi');
 		const apiKey = credentials.apiKey as string;
 
-		const splitComma = (str: string) => (str ? str.split(',').map((s) => s.trim()) : []);
+		const splitComma = (str: string) =>
+			str ? str.split(',').map((s) => s.trim()).filter(Boolean) : [];
 
 		for (let i = 0; i < items.length; i++) {
 			const resource = this.getNodeParameter('resource', i) as string;
@@ -630,20 +626,21 @@ export class Pulsetic implements INodeType {
 					if (operation === 'get') {
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}`;
+
 					} else if (operation === 'getAll') {
 						url = `${baseUrl}/monitors`;
+
 					} else if (operation === 'create') {
 						method = 'POST';
 						url = `${baseUrl}/monitors`;
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as IDataObject;
 						const requestType = this.getNodeParameter('monitorRequestType', i) as string;
 						const requestBody: Record<string, unknown> = {
-							urls: splitComma(this.getNodeParameter('monitorUrls', i, '') as string),
-							names: splitComma(this.getNodeParameter('monitorNames', i, '') as string),
+							urls: splitComma(this.getNodeParameter('monitorUrls', i) as string),
+							names: splitComma((additionalFields.monitorNames as string) || ''),
 							uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
 							ssl_check: this.getNodeParameter('monitorSslCheck', i),
-							request: {
-								type: requestType,
-							},
+							request: { type: requestType },
 						};
 						if (requestType === 'http') {
 							(requestBody.request as Record<string, unknown>).method = this.getNodeParameter('monitorRequestMethod', i);
@@ -651,19 +648,19 @@ export class Pulsetic implements INodeType {
 						const tcpPorts = this.getNodeParameter('monitorTcpPorts', i, '') as string;
 						if (tcpPorts) requestBody.tcp_ports = tcpPorts;
 						body = requestBody;
+
 					} else if (operation === 'update') {
 						method = 'PUT';
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}`;
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as IDataObject;
 						const requestType = this.getNodeParameter('monitorRequestType', i) as string;
 						const requestBody: Record<string, unknown> = {
-							name: this.getNodeParameter('monitorName', i, ''),
-							url: this.getNodeParameter('monitorUrl', i, ''),
+							name: (additionalFields.monitorName as string) || '',
+							url: this.getNodeParameter('monitorUrl', i),
 							ssl_check: this.getNodeParameter('monitorSslCheck', i),
 							uptime_check_frequency: this.getNodeParameter('monitorUptimeCheckFrequency', i),
-							request: {
-								type: requestType,
-							},
+							request: { type: requestType },
 						};
 						if (requestType === 'http') {
 							(requestBody.request as Record<string, unknown>).method = this.getNodeParameter('monitorRequestMethod', i);
@@ -671,22 +668,28 @@ export class Pulsetic implements INodeType {
 						const tcpPorts = this.getNodeParameter('monitorTcpPorts', i, '') as string;
 						if (tcpPorts) requestBody.tcp_ports = tcpPorts;
 						body = requestBody;
+
 					} else if (operation === 'delete') {
 						method = 'DELETE';
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}`;
+
 					} else if (operation === 'getStats') {
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}/stats`;
+
 					} else if (operation === 'getSnapshots') {
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}/snapshots`;
+
 					} else if (operation === 'getEvents') {
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}/events`;
+
 					} else if (operation === 'getChecks') {
 						const id = this.getNodeParameter('monitorId', i) as string;
 						url = `${baseUrl}/monitors/${id}/checks`;
+
 					} else if (operation === 'addNotificationChannel') {
 						method = 'POST';
 						const id = this.getNodeParameter('monitorId', i) as string;
@@ -705,35 +708,41 @@ export class Pulsetic implements INodeType {
 						else if (type === 'signl4') body = { signl4_webhook: value };
 						else body = { url: value };
 					}
+
 				} else if (resource === 'statusPage') {
 					if (operation === 'getAll') {
 						url = `${baseUrl}/status-page`;
+
 					} else if (operation === 'create' || operation === 'update') {
 						method = operation === 'create' ? 'POST' : 'PUT';
 						url = operation === 'create'
 							? `${baseUrl}/status-page`
 							: `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}`;
-						const isPrivate = this.getNodeParameter('statusPagePrivate', i) as boolean;
+
+						const additionalFields = this.getNodeParameter('additionalFields', i, {}) as IDataObject;
+						const isPrivate = (additionalFields.statusPagePrivate as boolean) || false;
 						body = {
 							title: this.getNodeParameter('statusPageTitle', i),
-							domain: this.getNodeParameter('statusPageDomain', i),
-							meta_title: this.getNodeParameter('statusPageMetaTitle', i),
-							uptime_threshold: this.getNodeParameter('statusPageUptimeThreshold', i),
-							remove_branding: this.getNodeParameter('statusPageRemoveBranding', i),
-							subscribe_to_updates: this.getNodeParameter('statusPageSubscribeToUpdates', i),
+							domain: (additionalFields.statusPageDomain as string) || '',
+							meta_title: (additionalFields.statusPageMetaTitle as string) || '',
+							uptime_threshold: additionalFields.statusPageUptimeThreshold !== undefined ? additionalFields.statusPageUptimeThreshold : 0.9,
+							remove_branding: (additionalFields.statusPageRemoveBranding as boolean) || false,
+							subscribe_to_updates: (additionalFields.statusPageSubscribeToUpdates as boolean) || false,
 							private: isPrivate,
-							uptime_percentage_style: this.getNodeParameter('statusPageUptimePercentageStyle', i),
-							show_location_tooltip: this.getNodeParameter('statusPageShowLocationTooltip', i),
-							monitors: splitComma(this.getNodeParameter('statusPageMonitors', i, '') as string).map(Number),
+							uptime_percentage_style: (additionalFields.statusPageUptimePercentageStyle as boolean) || false,
+							show_location_tooltip: additionalFields.statusPageShowLocationTooltip !== undefined ? additionalFields.statusPageShowLocationTooltip : true,
+							monitors: splitComma(this.getNodeParameter('statusPageMonitors', i, '') as string).map(Number).filter((n) => !isNaN(n)),
 						};
 						if (isPrivate) {
-							body.password = this.getNodeParameter('statusPagePassword', i);
+							body.password = additionalFields.statusPagePassword;
 						}
+
 					} else if (operation === 'delete') {
 						method = 'DELETE';
 						const id = this.getNodeParameter('statusPageId', i) as string;
 						url = `${baseUrl}/status-page/${id}`;
 					}
+
 				} else if (resource === 'statusPageMaintenance') {
 					if (operation === 'create' || operation === 'update') {
 						method = operation === 'create' ? 'POST' : 'PUT';
@@ -758,15 +767,18 @@ export class Pulsetic implements INodeType {
 								ending: this.getNodeParameter('maintenanceTimeEnding', i),
 							},
 						};
+
 					} else if (operation === 'delete') {
 						method = 'DELETE';
 						const id = this.getNodeParameter('maintenanceId', i) as string;
 						url = `${baseUrl}/status-page/maintenance/${id}`;
 					}
+
 				} else if (resource === 'statusPageIncident') {
 					if (operation === 'getAll') {
 						const id = this.getNodeParameter('statusPageId', i) as string;
 						url = `${baseUrl}/status-page/${id}/incidents`;
+
 					} else if (operation === 'create') {
 						method = 'POST';
 						url = `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}/incidents`;
@@ -778,17 +790,20 @@ export class Pulsetic implements INodeType {
 								date: this.getNodeParameter('incidentInitialDate', i),
 							},
 						};
+
 					} else if (operation === 'update') {
 						method = 'PUT';
 						url = `${baseUrl}/status-page/incidents/${this.getNodeParameter('incidentId', i)}`;
 						body = {
 							title: this.getNodeParameter('incidentTitle', i),
 						};
+
 					} else if (operation === 'delete') {
 						method = 'DELETE';
 						const id = this.getNodeParameter('incidentId', i) as string;
 						url = `${baseUrl}/status-page/incidents/${id}`;
 					}
+
 				} else if (resource === 'statusPageIncidentUpdate') {
 					if (operation === 'create' || operation === 'update') {
 						method = operation === 'create' ? 'POST' : 'PUT';
@@ -800,6 +815,7 @@ export class Pulsetic implements INodeType {
 							message: this.getNodeParameter('incidentUpdateMessage', i),
 							date: this.getNodeParameter('incidentUpdateDate', i),
 						};
+
 					} else if (operation === 'delete') {
 						method = 'DELETE';
 						const id = this.getNodeParameter('incidentUpdateId', i) as string;
@@ -822,6 +838,7 @@ export class Pulsetic implements INodeType {
 
 				const response = await this.helpers.httpRequest(requestOptions);
 				returnData.push({ json: response as IDataObject, pairedItem: { item: i } });
+
 			} catch (error) {
 				if (this.continueOnFail()) {
 					returnData.push({ json: { error: (error as Error).message }, pairedItem: { item: i } });
@@ -834,6 +851,4 @@ export class Pulsetic implements INodeType {
 		return [returnData];
 	}
 }
-
-
 

@@ -1,13 +1,16 @@
 {
     "name": "@pulsetic/n8n-nodes-pulsetic",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "description": "Pulsetic API integration for n8n",
     "keywords": [
         "n8n-community-node-package"
     ],
     "license": "MIT",
     "homepage": "https://github.com/designmodo/pulsetic-n8n#readme",
-    "author": "Pulsetic <info@pulsetic.com> (https://pulsetic.com/)",
+    "author": {
+        "name": "Pulsetic",
+        "email": "info@pulsetic.com"
+    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/designmodo/pulsetic-n8n.git"
@@ -21,6 +24,8 @@
         "prepublishOnly": "npm run build"
     },
     "n8n": {
+        "n8nNodesApiVersion": 1,
+        "strict": true,
         "credentials": [
             "dist/credentials/PulseticApi.credentials.js"
         ],
