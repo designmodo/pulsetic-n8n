@@ -1,7 +1,8 @@
-import { IAuthenticateGeneric, ICredentialTestRequest, ICredentialType, INodeProperties } from 'n8n-workflow';
+import { IAuthenticateGeneric, ICredentialTestRequest, ICredentialType, INodeProperties, Icon } from 'n8n-workflow';
 export declare class PulseticApi implements ICredentialType {
     name: string;
     displayName: string;
+    icon: Icon;
     documentationUrl: string;
     properties: INodeProperties[];
     authenticate: IAuthenticateGeneric;

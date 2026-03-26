@@ -5,7 +5,8 @@ class PulseticApi {
     constructor() {
         this.name = 'pulseticApi';
         this.displayName = 'Pulsetic API';
-        this.documentationUrl = 'https://pulsetic.com/';
+        this.icon = 'file:pulsetic.svg';
+        this.documentationUrl = 'https://help.pulsetic.com/article/223-tokens';
         this.properties = [
             {
                 displayName: 'API Key',

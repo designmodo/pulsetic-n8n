@@ -5,7 +5,9 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
-	NodeOperationError,
+	JsonObject,
+	NodeApiError,
+	NodeConnectionTypes,
 } from 'n8n-workflow';
 
 export class Pulsetic implements INodeType {
@@ -15,12 +17,13 @@ export class Pulsetic implements INodeType {
 		group: ['transform'],
 		version: 1,
 		description: 'Interact with Pulsetic API',
+		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		defaults: {
 			name: 'Pulsetic',
 		},
 		icon: 'file:pulsetic.svg',
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionTypes.Main],
+		outputs: [NodeConnectionTypes.Main],
 		credentials: [
 			{
 				name: 'pulseticApi',
@@ -37,9 +40,9 @@ export class Pulsetic implements INodeType {
 				options: [
 					{ name: 'Monitor', value: 'monitor' },
 					{ name: 'Status Page', value: 'statusPage' },
-					{ name: 'Status Page Maintenance', value: 'statusPageMaintenance' },
 					{ name: 'Status Page Incident', value: 'statusPageIncident' },
 					{ name: 'Status Page Incident Update', value: 'statusPageIncidentUpdate' },
+					{ name: 'Status Page Maintenance', value: 'statusPageMaintenance' },
 				],
 				default: 'monitor',
 			},
@@ -52,16 +55,16 @@ export class Pulsetic implements INodeType {
 				noDataExpression: true,
 				displayOptions: { show: { resource: ['monitor'] } },
 				options: [
-					{ name: 'Get', value: 'get', action: 'Get a monitor' },
-					{ name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
-					{ name: 'Create', value: 'create', action: 'Create a monitor' },
-					{ name: 'Update', value: 'update', action: 'Update a monitor' },
-					{ name: 'Delete', value: 'delete', action: 'Delete a monitor' },
-					{ name: 'Get Stats', value: 'getStats', action: 'Get monitor statistics' },
-					{ name: 'Get Snapshots', value: 'getSnapshots', action: 'Get snapshots for monitor' },
-					{ name: 'Get Events', value: 'getEvents', action: 'Get events for monitor' },
-					{ name: 'Get Checks', value: 'getChecks', action: 'Get checks for monitor' },
 					{ name: 'Add Notification Channel', value: 'addNotificationChannel', action: 'Add a notification channel' },
+					{ name: 'Create', value: 'create', action: 'Create a monitor' },
+					{ name: 'Delete', value: 'delete', action: 'Delete a monitor' },
+					{ name: 'Get', value: 'get', action: 'Get a monitor' },
+					{ name: 'Get Checks', value: 'getChecks', action: 'Get checks for monitor' },
+					{ name: 'Get Events', value: 'getEvents', action: 'Get events for monitor' },
+					{ name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
+					{ name: 'Get Snapshots', value: 'getSnapshots', action: 'Get snapshots for monitor' },
+					{ name: 'Get Stats', value: 'getStats', action: 'Get monitor statistics' },
+					{ name: 'Update', value: 'update', action: 'Update a monitor' },
 				],
 				default: 'get',
 			},
@@ -99,7 +102,7 @@ export class Pulsetic implements INodeType {
 				noDataExpression: true,
 				displayOptions: { show: { resource: ['statusPageIncident'] } },
 				options: [
-					{ name: 'Get All', value: 'getAll', action: 'Get all incidents for a status page' },
+					{ name: 'Get Many', value: 'getAll', action: 'Get many incidents for a status page' },
 					{ name: 'Create', value: 'create', action: 'Create incident' },
 					{ name: 'Update', value: 'update', action: 'Update incident' },
 					{ name: 'Delete', value: 'delete', action: 'Delete incident' },
@@ -605,8 +608,6 @@ export class Pulsetic implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const returnData: INodeExecutionData[] = [];
-		const credentials = await this.getCredentials('pulseticApi');
-		const apiKey = credentials.apiKey as string;
 
 		const splitComma = (str: string) =>
 			str ? str.split(',').map((s) => s.trim()).filter(Boolean) : [];
@@ -826,9 +827,6 @@ export class Pulsetic implements INodeType {
 				const requestOptions: IHttpRequestOptions = {
 					method: method as IHttpRequestOptions['method'],
 					url,
-					headers: {
-						Authorization: apiKey,
-					},
 					json: true,
 				};
 
@@ -836,7 +834,7 @@ export class Pulsetic implements INodeType {
 					requestOptions.body = body;
 				}
 
-				const response = await this.helpers.httpRequest(requestOptions);
+				const response = await this.helpers.httpRequestWithAuthentication.call(this, 'pulseticApi', requestOptions);
 				returnData.push({ json: response as IDataObject, pairedItem: { item: i } });
 
 			} catch (error) {
@@ -844,7 +842,7 @@ export class Pulsetic implements INodeType {
 					returnData.push({ json: { error: (error as Error).message }, pairedItem: { item: i } });
 					continue;
 				}
-				throw new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
+				throw new NodeApiError(this.getNode(), error as JsonObject, { itemIndex: i });
 			}
 		}
 
