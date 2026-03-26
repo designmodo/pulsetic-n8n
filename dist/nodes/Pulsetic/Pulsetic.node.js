@@ -10,12 +10,13 @@ class Pulsetic {
             group: ['transform'],
             version: 1,
             description: 'Interact with Pulsetic API',
+            subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
             defaults: {
                 name: 'Pulsetic',
             },
             icon: 'file:pulsetic.svg',
-            inputs: ['main'],
-            outputs: ['main'],
+            inputs: [n8n_workflow_1.NodeConnectionTypes.Main],
+            outputs: [n8n_workflow_1.NodeConnectionTypes.Main],
             credentials: [
                 {
                     name: 'pulseticApi',
@@ -32,9 +33,9 @@ class Pulsetic {
                     options: [
                         { name: 'Monitor', value: 'monitor' },
                         { name: 'Status Page', value: 'statusPage' },
-                        { name: 'Status Page Maintenance', value: 'statusPageMaintenance' },
                         { name: 'Status Page Incident', value: 'statusPageIncident' },
                         { name: 'Status Page Incident Update', value: 'statusPageIncidentUpdate' },
+                        { name: 'Status Page Maintenance', value: 'statusPageMaintenance' },
                     ],
                     default: 'monitor',
                 },
@@ -46,16 +47,16 @@ class Pulsetic {
                     noDataExpression: true,
                     displayOptions: { show: { resource: ['monitor'] } },
                     options: [
-                        { name: 'Get', value: 'get', action: 'Get a monitor' },
-                        { name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
-                        { name: 'Create', value: 'create', action: 'Create a monitor' },
-                        { name: 'Update', value: 'update', action: 'Update a monitor' },
-                        { name: 'Delete', value: 'delete', action: 'Delete a monitor' },
-                        { name: 'Get Stats', value: 'getStats', action: 'Get monitor statistics' },
-                        { name: 'Get Snapshots', value: 'getSnapshots', action: 'Get snapshots for monitor' },
-                        { name: 'Get Events', value: 'getEvents', action: 'Get events for monitor' },
-                        { name: 'Get Checks', value: 'getChecks', action: 'Get checks for monitor' },
                         { name: 'Add Notification Channel', value: 'addNotificationChannel', action: 'Add a notification channel' },
+                        { name: 'Create', value: 'create', action: 'Create a monitor' },
+                        { name: 'Delete', value: 'delete', action: 'Delete a monitor' },
+                        { name: 'Get', value: 'get', action: 'Get a monitor' },
+                        { name: 'Get Checks', value: 'getChecks', action: 'Get checks for monitor' },
+                        { name: 'Get Events', value: 'getEvents', action: 'Get events for monitor' },
+                        { name: 'Get Many', value: 'getAll', action: 'Get many monitors' },
+                        { name: 'Get Snapshots', value: 'getSnapshots', action: 'Get snapshots for monitor' },
+                        { name: 'Get Stats', value: 'getStats', action: 'Get monitor statistics' },
+                        { name: 'Update', value: 'update', action: 'Update a monitor' },
                     ],
                     default: 'get',
                 },
@@ -93,7 +94,7 @@ class Pulsetic {
                     noDataExpression: true,
                     displayOptions: { show: { resource: ['statusPageIncident'] } },
                     options: [
-                        { name: 'Get All', value: 'getAll', action: 'Get all incidents for a status page' },
+                        { name: 'Get Many', value: 'getAll', action: 'Get many incidents for a status page' },
                         { name: 'Create', value: 'create', action: 'Create incident' },
                         { name: 'Update', value: 'update', action: 'Update incident' },
                         { name: 'Delete', value: 'delete', action: 'Delete incident' },
@@ -591,8 +592,6 @@ class Pulsetic {
     async execute() {
         const items = this.getInputData();
         const returnData = [];
-        const credentials = await this.getCredentials('pulseticApi');
-        const apiKey = credentials.apiKey;
         const splitComma = (str) => str ? str.split(',').map((s) => s.trim()).filter(Boolean) : [];
         for (let i = 0; i < items.length; i++) {
             const resource = this.getNodeParameter('resource', i);
@@ -809,15 +808,12 @@ class Pulsetic {
                 const requestOptions = {
                     method: method,
                     url,
-                    headers: {
-                        Authorization: apiKey,
-                    },
                     json: true,
                 };
                 if (method !== 'GET' && method !== 'DELETE') {
                     requestOptions.body = body;
                 }
-                const response = await this.helpers.httpRequest(requestOptions);
+                const response = await this.helpers.httpRequestWithAuthentication.call(this, 'pulseticApi', requestOptions);
                 returnData.push({ json: response, pairedItem: { item: i } });
             }
             catch (error) {
@@ -825,7 +821,7 @@ class Pulsetic {
                     returnData.push({ json: { error: error.message }, pairedItem: { item: i } });
                     continue;
                 }
-                throw new n8n_workflow_1.NodeOperationError(this.getNode(), error, { itemIndex: i });
+                throw new n8n_workflow_1.NodeApiError(this.getNode(), error, { itemIndex: i });
             }
         }
         return [returnData];

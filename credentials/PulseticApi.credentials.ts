@@ -3,11 +3,13 @@ import {
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
+	Icon,
 } from 'n8n-workflow';
 export class PulseticApi implements ICredentialType {
 	name = 'pulseticApi';
 	displayName = 'Pulsetic API';
-	documentationUrl = 'https://pulsetic.com/';
+	icon: Icon = 'file:pulsetic.svg';
+	documentationUrl = 'https://help.pulsetic.com/article/223-tokens';
 	properties: INodeProperties[] = [
 		{
 			displayName: 'API Key',
