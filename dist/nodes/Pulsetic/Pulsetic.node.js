@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pulsetic = void 0;
 const n8n_workflow_1 = require("n8n-workflow");
+const timezones_1 = require("./timezones");
 class Pulsetic {
     constructor() {
         this.description = {
@@ -190,13 +191,13 @@ class Pulsetic {
                     name: 'channelType',
                     type: 'options',
                     options: [
+                        { name: 'Discord Webhook', value: 'discord-webhook' },
                         { name: 'Email', value: 'email' },
+                        { name: 'MS Teams Webhook', value: 'ms-teams-webhook' },
                         { name: 'Phone Number', value: 'phone-number' },
+                        { name: 'Signl4', value: 'signl4' },
                         { name: 'Slack Webhook', value: 'slack-webhook' },
                         { name: 'Webhook', value: 'webhook' },
-                        { name: 'Signl4', value: 'signl4' },
-                        { name: 'Discord Webhook', value: 'discord-webhook' },
-                        { name: 'MS Teams Webhook', value: 'ms-teams-webhook' },
                     ],
                     default: 'email',
                     displayOptions: { show: { resource: ['monitor'], operation: ['addNotificationChannel'] } },
@@ -274,13 +275,13 @@ class Pulsetic {
                     type: 'options',
                     required: true,
                     options: [
-                        { name: 'GET', value: 'get' },
-                        { name: 'POST', value: 'post' },
-                        { name: 'PUT', value: 'put' },
                         { name: 'DELETE', value: 'delete' },
-                        { name: 'PATCH', value: 'patch' },
+                        { name: 'GET', value: 'get' },
                         { name: 'HEAD', value: 'head' },
                         { name: 'OPTIONS', value: 'options' },
+                        { name: 'PATCH', value: 'patch' },
+                        { name: 'POST', value: 'post' },
+                        { name: 'PUT', value: 'put' },
                     ],
                     default: 'get',
                     displayOptions: {
@@ -460,11 +461,12 @@ class Pulsetic {
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
                 {
-                    displayName: 'Timezone (JSON)',
+                    displayName: 'Timezone',
                     name: 'maintenanceTimezone',
-                    type: 'json',
-                    default: '{}',
+                    type: 'options',
                     required: true,
+                    options: timezones_1.timezones.map((tz) => ({ name: tz.title, value: tz.value })),
+                    default: 'UTC',
                     displayOptions: { show: { resource: ['statusPageMaintenance'], operation: ['create', 'update'] } },
                 },
                 {
@@ -527,11 +529,11 @@ class Pulsetic {
                     type: 'options',
                     required: true,
                     options: [
-                        { name: 'Investigating', value: 'investigating' },
+                        { name: 'Exploring', value: 'exploring' },
                         { name: 'Identified', value: 'identified' },
+                        { name: 'Investigating', value: 'investigating' },
                         { name: 'Monitoring', value: 'monitoring' },
                         { name: 'Resolved', value: 'resolved' },
-                        { name: 'Exploring', value: 'exploring' },
                     ],
                     default: 'investigating',
                     displayOptions: { show: { resource: ['statusPageIncident'], operation: ['create'] } },
@@ -560,11 +562,11 @@ class Pulsetic {
                     type: 'options',
                     required: true,
                     options: [
-                        { name: 'Investigating', value: 'investigating' },
+                        { name: 'Exploring', value: 'exploring' },
                         { name: 'Identified', value: 'identified' },
+                        { name: 'Investigating', value: 'investigating' },
                         { name: 'Monitoring', value: 'monitoring' },
                         { name: 'Resolved', value: 'resolved' },
-                        { name: 'Exploring', value: 'exploring' },
                     ],
                     default: 'investigating',
                     displayOptions: { show: { resource: ['statusPageIncidentUpdate'], operation: ['create', 'update'] } },
@@ -734,8 +736,9 @@ class Pulsetic {
                         url = operation === 'create'
                             ? `${baseUrl}/status-page/${this.getNodeParameter('statusPageId', i)}/maintenance`
                             : `${baseUrl}/status-page/maintenance/${this.getNodeParameter('maintenanceId', i)}`;
-                        const timezoneParam = this.getNodeParameter('maintenanceTimezone', i, {});
-                        const timezone = typeof timezoneParam === 'string' ? JSON.parse(timezoneParam) : timezoneParam;
+                        const tzValue = this.getNodeParameter('maintenanceTimezone', i);
+                        const tzEntry = timezones_1.timezones.find((tz) => tz.value === tzValue);
+                        const timezone = tzEntry !== null && tzEntry !== void 0 ? tzEntry : { value: 'UTC', abbr: 'UTC', offset: 0, isdst: false, title: '(UTC) Coordinated Universal Time', utc: ['Etc/GMT'] };
                         body = {
                             name: this.getNodeParameter('maintenanceName', i),
                             description: this.getNodeParameter('maintenanceDescription', i),
